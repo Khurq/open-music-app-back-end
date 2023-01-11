@@ -1,13 +1,16 @@
+/* eslint-disable no-unused-vars */
 const autoBind = require('auto-bind');
 
 class AlbumsHandler {
-  constructor(service) {
+  constructor(service, validator) {
     this._service = service;
+    this._validator = validator;
 
     autoBind(this);
   }
 
   postAlbumHandler(request, h) {
+    this._validator.validateAlbumPayload(request.payload);
     const { name = 'untitled', year } = request.payload;
 
     const albumId = this._service.addAlbum({ name, year });
@@ -23,62 +26,35 @@ class AlbumsHandler {
   }
 
   getAlbumByIdHandler(request, h) {
-    try {
-      const { id } = request.params;
-      const album = this._service.getAlbumById(id);
-      return {
-        status: 'success',
-        data: {
-          album,
-        },
-      };
-    } catch (error) {
-      const response = h.response({
-        status: 'fail',
-        message: error.message,
-      });
-      response.code(404);
-      return response;
-    }
+    const { id } = request.params;
+    const album = this._service.getAlbumById(id);
+    return {
+      status: 'success',
+      data: {
+        album,
+      },
+    };
   }
 
   putAlbumByIdHandler(request, h) {
-    try {
-      const { id } = request.params;
+    const { id } = request.params;
 
-      this._service.editAlbumById(id, request.payload);
+    this._service.editAlbumById(id, request.payload);
 
-      return {
-        status: 'success',
-        message: 'Berhasil mengubah data album',
-      };
-    } catch (error) {
-      const response = h.response({
-        status: 'fail',
-        message: error.message,
-      });
-      response.code(404);
-      return response;
-    }
+    return {
+      status: 'success',
+      message: 'Berhasil mengubah data album',
+    };
   }
 
   deleteAlbumByIdHandler(request, h) {
-    try {
-      const { id } = request.params;
-      this._service.deleteAlbumById(id);
+    const { id } = request.params;
+    this._service.deleteAlbumById(id);
 
-      return {
-        status: 'success',
-        message: 'Data berhasil dihapus',
-      };
-    } catch (error) {
-      const response = h.response({
-        status: 'fail',
-        nessage: error.message,
-      });
-      response.code(404);
-      return response;
-    }
+    return {
+      status: 'success',
+      message: 'Data berhasil dihapus',
+    };
   }
 }
 

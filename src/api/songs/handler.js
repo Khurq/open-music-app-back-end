@@ -1,8 +1,10 @@
+/* eslint-disable no-unused-vars */
 const autoBind = require('auto-bind');
 
 class SongsHandler {
-  constructor(service) {
+  constructor(service, validator) {
     this._service = service;
+    this._validator = validator;
 
     autoBind(this);
   }
@@ -37,62 +39,35 @@ class SongsHandler {
   }
 
   getSongByIdHandler(request, h) {
-    try {
-      const { id } = request.params;
-      const song = this._service.getSongById(id);
-      return {
-        status: 'success',
-        data: {
-          song,
-        },
-      };
-    } catch (error) {
-      const response = h.response({
-        status: 'fail',
-        message: error.message,
-      });
-      response.code(404);
-      return response;
-    }
+    const { id } = request.params;
+    const song = this._service.getSongById(id);
+    return {
+      status: 'success',
+      data: {
+        song,
+      },
+    };
   }
 
   putSongByIdHandler(request, h) {
-    try {
-      const { id } = request.params;
+    const { id } = request.params;
 
-      this._service.editSongById(id, request.payload);
+    this._service.editSongById(id, request.payload);
 
-      return {
-        status: 'success',
-        message: 'Berhasil mengubah data song',
-      };
-    } catch (error) {
-      const response = h.response({
-        status: 'fail',
-        message: error.message,
-      });
-      response.code(404);
-      return response;
-    }
+    return {
+      status: 'success',
+      message: 'Berhasil mengubah data song',
+    };
   }
 
   deleteSongByIdHandler(request, h) {
-    try {
-      const { id } = request.params;
-      this._service.deleteSongById(id);
+    const { id } = request.params;
+    this._service.deleteSongById(id);
 
-      return {
-        status: 'success',
-        message: 'Data berhasil dihapus',
-      };
-    } catch (error) {
-      const response = h.response({
-        status: 'fail',
-        nessage: error.message,
-      });
-      response.code(404);
-      return response;
-    }
+    return {
+      status: 'success',
+      message: 'Data berhasil dihapus',
+    };
   }
 }
 
