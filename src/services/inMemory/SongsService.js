@@ -11,9 +11,11 @@ class SongsService {
     title, year, genre, performer, duration, albumId,
   }) {
     const id = `song-${nanoid(16)}`;
+    const createdAt = new Date().toISOString();
+    const updatedAt = createdAt;
 
     const newSong = {
-      title, year, genre, performer, duration, albumId,
+      title, year, genre, performer, duration, albumId, id, createdAt, updatedAt,
     };
 
     this._songs.push(newSong);
@@ -48,6 +50,8 @@ class SongsService {
       throw new NotFoundError('Gagal memperbarui lagu. Id tidak ditemukan');
     }
 
+    const updatedAt = new Date().toISOString();
+
     this._songs[index] = {
       ...this._songs[index],
       title,
@@ -56,6 +60,7 @@ class SongsService {
       performer,
       duration,
       albumId,
+      updatedAt,
     };
   }
 
